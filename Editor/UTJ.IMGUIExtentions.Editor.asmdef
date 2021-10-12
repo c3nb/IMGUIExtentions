@@ -1,0 +1,17 @@
+{
+    "name": "UTJ.IMGUIExtentions.Editor",
+    "references": [
+        "GUID:f78d7673835fa924fa0978c80af15eb5"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

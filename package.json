@@ -1,0 +1,20 @@
+{
+  "name": "com.utj.imguiextentions",
+  "version": "0.1.0",
+  "displayName": "IMGUI Extentions",
+  "description": "This package extends GUI/GUILayout/EditorGUI/EditorGUILayout.",
+  "unity": "2018.1",
+  "dependencies": {},
+  "keywords": [
+    "IMGUI",
+    "GUI",
+    "GUILayout",
+    "EditorGUI",
+    "EditorGUILayout"
+  ],
+  "author": {
+    "name": "Katsumasa.Kimura",
+    "email": "katsumasa@unity3d.com",
+    "url": "https://github.com/katsumasa"
+  }
+}
