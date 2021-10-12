@@ -4,9 +4,9 @@ This package extends GUI/GUILayout/EditorGUI/EditorGUILayout.
 
 <img src="https://user-images.githubusercontent.com/29646672/136915672-6a080991-e69d-4654-877d-5c0e86eefee8.gif" width="480"><img src="https://user-images.githubusercontent.com/29646672/136915679-a88445a1-42b9-4862-b25a-8e82cb9c548a.gif" width="480">
 
-## Intall
+## Installing 
 
-### using git
+### using Git
 
 ```
 git clone https://github.com/katsumasa/IMGUIExtentions.git
@@ -16,4 +16,14 @@ git clone https://github.com/katsumasa/IMGUIExtentions.git
 
 ![image](https://user-images.githubusercontent.com/29646672/136918028-7236dbf2-2b47-4ea2-9390-61ea57b5e107.png)
 
-Add Package from git URL... https://github.com/katsumasa/IMGUIExtentions.git
+1. Click the add  button in the status bar.
+2. The options for adding packages appear.
+3. Select Add package from git URL from the add menu. A text box and an Add button appear.
+4. Enter https://github.com/katsumasa/IMGUIExtentions.git in the text box and click Add.
+
+
+
+## Script Reference
+
+[Here!!](https://github.com/katsumasa/IMGUIExtentions/wiki#script-reference)
+
