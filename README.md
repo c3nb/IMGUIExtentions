@@ -21,7 +21,7 @@ git clone https://github.com/katsumasa/IMGUIExtentions.git
 3. Select Add package from git URL from the add menu. A text box and an Add button appear.
 4. Enter https://github.com/katsumasa/IMGUIExtentions.git in the text box and click Add.
 
-
+[Click here for details.](https://docs.unity3d.com/2019.4/Documentation/Manual/upm-ui-giturl.html)
 
 ## Script Reference
 
