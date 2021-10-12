@@ -1,12 +1,7 @@
 # IMGUIExtentions
+
 This package extends GUI/GUILayout/EditorGUI/EditorGUILayout.
 
-
-GUI/GUILayout</br>
-<img src="https://user-images.githubusercontent.com/29646672/136912508-962dbc8e-4863-487b-b0cd-46cd167fe4ac.gif" width="480">
+<img src="https://user-images.githubusercontent.com/29646672/136915672-6a080991-e69d-4654-877d-5c0e86eefee8.gif" width="480"><img src="https://user-images.githubusercontent.com/29646672/136915679-a88445a1-42b9-4862-b25a-8e82cb9c548a.gif" width="480">
 
 
-<br>
-
-EditorGUI/EditorGUILayout</br>
-<img src="https://user-images.githubusercontent.com/29646672/136913124-5646cfe1-8ab1-4710-9518-02a2afce5742.gif" width="480">
