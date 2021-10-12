@@ -1,5 +1,6 @@
 # IMGUIExtentions
 ![GitHub all releases](https://img.shields.io/github/downloads/katsumasa/IMGUIExtentions/total)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/katsumasa/IMGUIExtentions)
 
 This package extends GUI/GUILayout/EditorGUI/EditorGUILayout.
 
