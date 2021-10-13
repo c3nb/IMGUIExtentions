@@ -3,7 +3,6 @@
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/katsumasa/IMGUIExtentions)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/katsumasa/IMGUIExtentions)
-![GitHub all releases](https://img.shields.io/github/downloads/katsumasa/IMGUIExtentions/total)
 
 
 This package extends GUI/GUILayout/EditorGUI/EditorGUILayout.
