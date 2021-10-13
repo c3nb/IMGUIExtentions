@@ -25,8 +25,8 @@ public class EditorSample : UnityEditor.EditorWindow
 
         for (var i = 0; i < 1000; i++)
         {
-            var v = Mathf.Sin((i % 360.0f) / 180.0f * Mathf.PI);
-            //var v = 1000 + i;
+            //var v = Mathf.Sin((i % 360.0f) / 180.0f * Mathf.PI);
+            var v = -1000 + i;
             list.Add(v);
         }
         mSelect = -1;

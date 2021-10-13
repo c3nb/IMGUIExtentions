@@ -1,6 +1,6 @@
 {
   "name": "com.utj.imguiextentions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "displayName": "IMGUI Extentions",
   "description": "This package extends GUI/GUILayout/EditorGUI/EditorGUILayout.",
   "unity": "2018.1",

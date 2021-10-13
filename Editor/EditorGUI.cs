@@ -140,10 +140,15 @@ namespace UTJ
                 if (select >= 0 && select < list.Count)
                 {
                     var value = list[select];
-                    var label = new GUIContent(Format("{0,3:F1}", value - Mathf.Abs(realMin)));
-                    var contentSize = UnityEditor.EditorStyles.label.CalcSize(label);
-                    var x = rect.x + select - contentSize.x / 2;
-                    var y = rect.y + rect.height - value * scale;
+                    if (realMin < 0f)
+                    {
+                        value -= Mathf.Abs(realMin);
+                    }
+                    var label = new GUIContent(Format("{0,3:F1}", value));
+
+                    var contentSize = UnityEditor.EditorStyles.label.CalcSize(label);                    
+                    var x = rect.x + rect.width - len + select * 1.0f - contentSize.x / 2;                    
+                    var y = rect.y + rect.height - list[select] * scale - contentSize.y;
                     var w = contentSize.x;
                     var h = contentSize.y;
 
