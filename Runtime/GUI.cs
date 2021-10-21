@@ -47,18 +47,38 @@ namespace UTJ
         /// <param name="selectColor">協調表示する色</param>
         /// <param name="style">スタイル（未使用）</param>
         static public void Graph(Rect rect, GUIContent content, List<float> srcs, int index, Color color, int select, Color selectColor, GUIStyle style)
-        {            
-            int len = (int)rect.width;
-            index = Mathf.Min(index, srcs.Count - len);
-            index = Mathf.Max(0, index);
-            len = Mathf.Min(len, srcs.Count - index);
+        {
+            Graph(rect, content, srcs, index, color, select, Vector2.zero,selectColor, 1, UnityEngine.Color.gray, true, Color.white, 0f, UnityEngine.GUI.skin.box);
+        }
 
-            
+        static public float Graph(
+        Rect rect,
+        GUIContent content,
+        List<float> srcs,
+        int index,
+        Color color,
+        int select,
+        Vector2 position,
+        Color selectColor,
+        int barWidth,
+        Color backColor,
+        bool isEnabledAdditionalLine,
+        Color additionalLineColor,
+        float scale,
+        GUIStyle style
+        ) 
+            {
+            int len = ((int)rect.width) / barWidth;
+            var ofst = Mathf.Min(index, srcs.Count - len);
+            ofst = Mathf.Max(0, ofst);
+            len = Mathf.Min(len, srcs.Count - ofst);
+
+
             // indexの位置からグラフに表示される範囲でリストを作成する
             var list = new List<float>();            
             for(var i = 0; i < len; i++)
             {
-                list.Add(srcs[i + index]);
+                list.Add(srcs[i + ofst]);
             }
 
 
@@ -91,7 +111,10 @@ namespace UTJ
                     avgValue = list.Average();
                 }
                 // 最大値の高さが描画範囲の90%位に                                
-                var scale = rect.height / maxValue * 0.90f;
+                if (scale <= 0f)
+                {
+                    scale = rect.height / maxValue * 0.90f;
+                }
 
 
                 for (var i = 0; i < list.Count; i++)
@@ -100,41 +123,50 @@ namespace UTJ
                     var h = list[i] * scale;
                     var x = rect.x + rect.width - len + i * w;
                     var y = rect.y + rect.height - h;
-                    if(i == select)
+                    var r = new Rect(x, y, w, h);
+
+                    if ((select == -2) && r.Contains(position))
                     {
-                        UnityEngine.GUI.DrawTexture(new Rect(x, y, w, h), texture, ScaleMode.StretchToFill, true, 0, selectColor, 0, 0);
-                    } 
+                        select = i;
+                    }
+                    if (i == select)
+                    {                        
+                        UnityEngine.GUI.DrawTexture(r,Texture2D.whiteTexture, ScaleMode.StretchToFill, true, 0, selectColor, 0, 0);
+                    }
                     else
                     {
-                        UnityEngine.GUI.DrawTexture(new Rect(x, y, w, h), texture, ScaleMode.StretchToFill, true, 0, color, 0, 0);
-                    }                    
+                        UnityEngine.GUI.DrawTexture(r, Texture2D.whiteTexture, ScaleMode.StretchToFill, true, 0, color, 0, 0);                        
+                    }
                 }
 
-                // 最大値の補助線
+                if (isEnabledAdditionalLine)
                 {
-                    var x = rect.x;
-                    var y = rect.y + rect.height - maxValue * scale;
-                    var w = rect.width;
-                    var h = 1.0f;
-                    DrawAdditionalLine(new Rect(x, y, w, h), realMax, Color.white);                    
-                }
+                    // 最大値の補助線
+                    {
+                        var x = rect.x;
+                        var y = rect.y + rect.height - maxValue * scale;
+                        var w = rect.width;
+                        var h = 1.0f;
+                        DrawAdditionalLine(new Rect(x, y, w, h), realMax, additionalLineColor);
+                    }
 
-                // 平均値の補助線
-                {
-                    var x = rect.x;
-                    var y = rect.y + rect.height - avgValue * scale;
-                    var w = rect.width;
-                    var h = 1.0f;
-                    DrawAdditionalLine(new Rect(x, y, w, h), realAvg, Color.white);                    
-                }
+                    // 平均値の補助線
+                    {
+                        var x = rect.x;
+                        var y = rect.y + rect.height - avgValue * scale;
+                        var w = rect.width;
+                        var h = 1.0f;
+                        DrawAdditionalLine(new Rect(x, y, w, h), realAvg, additionalLineColor);
+                    }
 
-                // 最小値の補助線
-                {
-                    var x = rect.x;
-                    var y = rect.y + rect.height - minValue * scale;
-                    var w = rect.width;
-                    var h = 1.0f;
-                    DrawAdditionalLine(new Rect(x, y, w, h), realMin, Color.white);
+                    // 最小値の補助線
+                    {
+                        var x = rect.x;
+                        var y = rect.y + rect.height - minValue * scale;
+                        var w = rect.width;
+                        var h = 1.0f;
+                        DrawAdditionalLine(new Rect(x, y, w, h), realMin, additionalLineColor);
+                    }
                 }
 
                 // 選択された値を表示する
@@ -155,8 +187,20 @@ namespace UTJ
                     var r = new Rect(x, y, w, h);                    
                     UnityEngine.GUI.DrawTexture(r,Texture2D.whiteTexture, ScaleMode.StretchToFill, true, 0, new Color32(0,0,0,128), 0, 0);
                     UnityEngine.GUI.Label(r, label);
+
+                    var frame = ofst + select;
+                    label = new GUIContent(Format("{0,3}", frame));
+                    contentSize = UnityEngine.GUI.skin.label.CalcSize(label);
+                    x = rect.x + rect.width - len + select * 1.0f - contentSize.x / 2;
+                    y = rect.y + rect.height - contentSize.y;
+                    w = contentSize.x;
+                    h = contentSize.y;
+                    r = new Rect(x, y, w, h);
+                    UnityEngine.GUI.DrawTexture(r, Texture2D.whiteTexture, ScaleMode.StretchToFill, true, 0, new Color32(0, 0, 0, 128), 0, 0);
+                    UnityEngine.GUI.Label(r, label);
                 }                
             }
+            return scale;
         }
 
 
