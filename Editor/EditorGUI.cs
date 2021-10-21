@@ -45,27 +45,67 @@ namespace UTJ
         /// <param name="color">グラフの井戸</param>
         /// <param name="select">グラフを強調表示するインデックス</param>
         /// <param name="selectColor">協調表示する色</param>
-        /// <param name="style">スタイル（未使用）</param>
+        /// <param name="style">スタイル（未使用）</param>        
         static public void Graph(Rect rect,GUIContent content, List<float> srcs,int index, Color color,int select,Color selectColor, GUIStyle style)
-        {                     
-            int len = (int)rect.width;
-            index = Mathf.Min(index, srcs.Count - len);            
-            index = Mathf.Max(0, index);            
-            len = Mathf.Min(len, srcs.Count - index);
+        {
+            Graph(rect, content, srcs, index, color, select,Vector2.zero, selectColor, 1, UnityEngine.Color.gray, true,Color.white,0f,UnityEngine.GUI.skin.box);
+        }
+
+
+        /// <summary>
+        /// グラフの描画を行う
+        /// </summary>
+        /// <param name="rect">描画範囲</param>
+        /// <param name="content">グラフのタイトル</param>
+        /// <param name="srcs">プロットするデータのリスト</param>
+        /// <param name="index">プロットする先頭のインデックス</param>
+        /// <param name="color">バーの色</param>
+        /// <param name="select">0以上:選択されたバー -1:選択バーを表示しない -2:positionを使用</param>
+        /// <param name="position">選択位置</param>
+        /// <param name="selectColor">選択されたバーの色</param>
+        /// <param name="barWidth">バーの幅</param>
+        /// <param name="backColor">背景の色</param>
+        /// <param name="isEnabledAdditionalLine">補助線を引く引くか否か</param>
+        /// <param name="additionalLineColor"></param>
+        /// <param name="scale">0以下:表示領域の高さに合わせて自動スケール その他:グラフをスケールする倍率/param>
+        /// <param name="style"></param>
+        /// <returns>内部で使用されたスケール倍率</returns>
+        static public float Graph(
+            Rect rect,
+            GUIContent content,
+            List<float> srcs,
+            int index,
+            Color color,
+            int select,
+            Vector2 position,
+            Color selectColor,
+            int barWidth,
+            Color backColor,
+            bool isEnabledAdditionalLine,
+            Color additionalLineColor,
+            float scale,
+            GUIStyle style
+            )
+        {
+
+            
+            int len = ((int)rect.width) / barWidth;
+            var ofst = Mathf.Min(index, srcs.Count - len);            
+            ofst = Mathf.Max(0, ofst);            
+            len = Mathf.Min(len, srcs.Count - ofst);
             
             
             // indexの位置からグラフに表示される範囲でリストを作成する
             var list = new List<float>();
             for (var i = 0; i < len; i++)
             {
-                list.Add(srcs[i + index]);
+                list.Add(srcs[i + ofst]);
             }
 
-
-            // 背景
-            UnityEditor.EditorGUI.DrawRect(rect, UnityEngine.Color.gray);
+            // 背景            
+            UnityEditor.EditorGUI.DrawRect(rect, backColor);
             
-
+            
             if (list.Count != 0)
             {
                 var minValue = list.Min();
@@ -89,51 +129,64 @@ namespace UTJ
                     avgValue = list.Average();
                 }
 
-                // 最大値の高さが描画範囲の90%位に                                
-                var scale = rect.height / maxValue * 0.90f;
-                
+                // 最大値の高さが描画範囲の90%位に
+                if (scale <= 0f)
+                {
+                    scale = rect.height / maxValue * 0.90f;
+                }
+
+             
+
                 // グラフを描画
                 for (var i = 0; i < list.Count; i++)
                 {
-                    var w = 1.0f;                    
+                    var w = barWidth;
                     var h = list[i] * scale;
-                    var x = rect.x + rect.width - len + i * w;                  
+                    var x = rect.x + rect.width - len * w + i * w;
                     var y = rect.y + rect.height - h;
+                    var r = new Rect(x, y, w, h);
+
+                    if((select == -2) && r.Contains(position))
+                    {
+                        select = i;
+                    }
                     if(i == select)
                     {
-                        UnityEditor.EditorGUI.DrawRect(new Rect(x, y, w, h), selectColor);
+                        UnityEditor.EditorGUI.DrawRect(r, selectColor);
                     }
                     else
                     {
-                        UnityEditor.EditorGUI.DrawRect(new Rect(x, y, w, h), color);
+                        UnityEditor.EditorGUI.DrawRect(r, color);
                     }                    
                 }
 
-                // 最大値の補助線
-                {
-                    var x = rect.x;
-                    var y = rect.y + rect.height - maxValue * scale;
-                    var w = rect.width;
-                    var h = 1.0f;
-                    DrawAdditionalLine(new Rect(x, y, w, h), realMax, Color.white);                    
-                }
+                if(isEnabledAdditionalLine){
+                    // 最大値の補助線
+                    {
+                        var x = rect.x;
+                        var y = rect.y + rect.height - maxValue * scale;
+                        var w = rect.width;
+                        var h = 1.0f;
+                        DrawAdditionalLine(new Rect(x, y, w, h), realMax, additionalLineColor);
+                    }
 
-                // 平均値の補助線
-                {
-                    var x = rect.x;
-                    var y = rect.y + rect.height - avgValue * scale;
-                    var w = rect.width;
-                    var h = 1.0f;
-                    DrawAdditionalLine(new Rect(x, y, w, h), realAvg, Color.white);                    
-                }
+                    // 平均値の補助線
+                    {
+                        var x = rect.x;
+                        var y = rect.y + rect.height - avgValue * scale;
+                        var w = rect.width;
+                        var h = 1.0f;
+                        DrawAdditionalLine(new Rect(x, y, w, h), realAvg, additionalLineColor);
+                    }
 
-                // 最小値の補助線
-                {
-                    var x = rect.x;
-                    var y = rect.y + rect.height - minValue * scale;
-                    var w = rect.width;
-                    var h = 1.0f;
-                    DrawAdditionalLine(new Rect(x,y,w,h),realMin,Color.white);
+                    // 最小値の補助線
+                    {
+                        var x = rect.x;
+                        var y = rect.y + rect.height - minValue * scale;
+                        var w = rect.width;
+                        var h = 1.0f;
+                        DrawAdditionalLine(new Rect(x,y,w,h),realMin, additionalLineColor);
+                    }
                 }
 
                 // 選択された値を表示する
@@ -145,7 +198,6 @@ namespace UTJ
                         value -= Mathf.Abs(realMin);
                     }
                     var label = new GUIContent(Format("{0,3:F1}", value));
-
                     var contentSize = UnityEditor.EditorStyles.label.CalcSize(label);                    
                     var x = rect.x + rect.width - len + select * 1.0f - contentSize.x / 2;                    
                     var y = rect.y + rect.height - list[select] * scale - contentSize.y;
@@ -155,6 +207,17 @@ namespace UTJ
                     var r = new Rect(x, y, w, h);
                     UnityEditor.EditorGUI.DrawRect(r, new Color32(0,0,0,128));
                     UnityEditor.EditorGUI.LabelField(r, label);
+
+                    var frame = ofst + select;
+                    label = new GUIContent(Format("{0,3}",frame));
+                    contentSize = UnityEditor.EditorStyles.label.CalcSize(label);
+                    x = rect.x + rect.width - len + select * 1.0f - contentSize.x / 2;
+                    y = rect.y + rect.height - contentSize.y;
+                    w = contentSize.x;
+                    h = contentSize.y;
+                    r = new Rect(x, y, w, h);                    
+                    UnityEditor.EditorGUI.DrawRect(r, new Color32(0, 0, 0, 128));
+                    UnityEditor.EditorGUI.LabelField(r,label);
                 }
             }
 
@@ -164,6 +227,8 @@ namespace UTJ
                 var contentSize = UnityEditor.EditorStyles.label.CalcSize(content);
                 UnityEditor.EditorGUI.LabelField(new Rect(rect.x, rect.y, contentSize.x, contentSize.y), content);
             }
+
+            return scale;
         }
 
 
